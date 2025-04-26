@@ -90,39 +90,39 @@ class Post(models.Model):
                     raise ValueError ("This Song Already Exist")
         super().save(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
 
-        if self.image:
-            self.apply_frame_from_url()
-    def apply_frame_from_url(self):
-        # Uploaded image path (your artist's image)
-        cover_path = self.image.path
+    #     if self.image:
+    #         self.apply_frame_from_url()
+    # def apply_frame_from_url(self):
+    #     # Uploaded image path (your artist's image)
+    #     cover_path = self.image.path
 
-        # URL of the external frame image
-        frame_url="http://127.0.0.1:8000/media/images/frame.jpg"
+    #     # URL of the external frame image
+    #     frame_url="http://127.0.0.1:8000/media/images/frame.jpg"
 
-        # Download the frame image
-        response = requests.get(frame_url)
-        if response.status_code != 200:
-            raise Exception("Failed to download frame image")
+    #     # Download the frame image
+    #     response = requests.get(frame_url)
+    #     if response.status_code != 200:
+    #         raise Exception("Failed to download frame image")
 
-        frame_image = Image.open(BytesIO(response.content)).convert("RGBA")
+    #     frame_image = Image.open(BytesIO(response.content)).convert("RGBA")
 
-        # Open the artist's image
-        with Image.open(cover_path).convert("RGBA") as cover:
-            cover = cover.resize(frame_image.size)
-            combined = Image.alpha_composite(cover, frame_image)
+    #     # Open the artist's image
+    #     with Image.open(cover_path).convert("RGBA") as cover:
+    #         cover = cover.resize(frame_image.size)
+    #         combined = Image.alpha_composite(cover, frame_image)
 
-            # Output path
-            output_dir = os.path.join(settings.MEDIA_ROOT, 'branded_covers')
-            os.makedirs(output_dir, exist_ok=True)
-            output_path = os.path.join(output_dir, f'branded_{os.path.basename(cover_path)}')
-            combined.save(output_path)
+    #         # Output path
+    #         output_dir = os.path.join(settings.MEDIA_ROOT, 'branded_covers')
+    #         os.makedirs(output_dir, exist_ok=True)
+    #         output_path = os.path.join(output_dir, f'branded_{os.path.basename(cover_path)}')
+    #         combined.save(output_path)
 
-            # Save result to model field
-            self.branded_image.name = f'branded_covers/branded_{os.path.basename(cover_path)}'
-            super().save(update_fields=['branded_image'])
+    #         # Save result to model field
+    #         self.branded_image.name = f'branded_covers/branded_{os.path.basename(cover_path)}'
+    #         super().save(update_fields=['branded_image'])
 
        
     class Meta: 
