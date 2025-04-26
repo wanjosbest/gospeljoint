@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlist List </title>
+</head>
+
+<body>
+    <h2>My Playlists</h2>
+<ul>
+    {% for playlist in playlists %}
+    <li><a href="{% url 'playlist_detail' playlist.id %}">{{ playlist.name }}</a></li>
+    {% endfor %}
+</ul>
+<a href="{% url 'create_playlist' %}">Create New Playlist</a>
+
+</body>
+
+</html>

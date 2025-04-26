@@ -1,0 +1,104 @@
+{% extends "base.html"%}
+{% block header%} 
+{% include "header.html" %}
+{% endblock %}
+{% block body %}
+{% if user.is_authenticated %}
+<center> <a href="{% url 'musicianuploadsong'%}"><h1 class="text-2xl font-bold text-orange-600 dark:text-orange-400">UPLOAD SONG</h1></a>
+</center>
+{% endif %}
+
+
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+
+    <!-- Trending Songs -->
+    <section class="container mx-auto px-4 py-6">
+        <h2 class="text-2xl font-bold text-orange-600 dark:text-orange-400">🔥 Trending Songs</h2>
+
+        <div class="flex space-x-4 overflow-x-auto py-4">
+            {% for trending in trending %}
+            <a href="{{trending.post.get_absolute_url}}">
+            <div class="song-item min-w-[200px] bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
+                <img src="{{trending.post.image.url}}" alt="{{trending.post.title}}" class="w-full h-32 object-cover rounded-md">
+               <a href="{{trending.post.get_absolute_url}}"> <p class="mt-2 text-lg font-semibold">{{trending.post.title}}</p></a>
+               
+                </a>
+            </div>
+       
+        {% endfor %}
+
+        </div>
+    </section>
+    <!--Promoted Songs-->
+    <section class="container mx-auto px-4 py-6">
+        <h2 class="text-2xl font-bold text-orange-600 dark:text-orange-400">🔥 Promoted Songs</h2>
+
+        <div class="flex space-x-4 overflow-x-auto py-4">
+            {% for promoted in promotedsongs %}
+            <div class="song-item min-w-[200px] bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
+                <img src="{{promoted.post.image.url}}" alt="{{promoted.post.title}}" class="w-full h-32 object-cover rounded-md">
+               <a href="{{promoted.post.get_absolute_url}}"> <p class="mt-2 text-lg font-semibold">{{promoted.post.title}} |{{promoted.post.user}}</p></a>
+            </div>
+        {% endfor %}
+
+        </div>
+    </section>
+       <!--Recent Songs Songs-->
+       <section class="container mx-auto px-4 py-6">
+        <h2 class="text-2xl font-bold text-orange-600 dark:text-orange-400">🔥 Recent Songs</h2>
+
+        <div class="flex space-x-4 overflow-x-auto py-4">
+            {% if recentposts %}
+            {% for recent in recentposts %}
+            <div class="song-item min-w-[200px] bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
+                <img src="{{recent.image.url}}" alt="{{recent.title}}" class="w-full h-32 object-cover rounded-md">
+               <a href="{{recent.get_absolute_url}}"> <p class="mt-2 text-lg font-semibold">{{recent.title}}</p></a>
+            </div>
+        {% endfor %}
+        {% endif %}
+
+        </div>
+    </section>
+    <button id="scrollToTop" class="fixed bottom-8 right-8 bg-orange-500 text-white p-3 rounded-full shadow-md hidden">
+        ↑
+    </button>
+    <!-- Latest Songs -->
+    <!-- <section class="container mx-auto px-4 py-6">
+        <h2 class="text-2xl font-bold text-orange-600 dark:text-orange-400">🎵 Latest Songs</h2>
+        <div id="songContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            <div class="song-item bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
+                <img src="/media/images/wanjos.jpg" alt="Song Cover" class="w-full h-40 object-cover rounded-md">
+                <h3 class="text-lg font-bold mt-2">Song Title 1</h3>
+                <p class="text-gray-500 dark:text-gray-400">Artist Name</p>
+                <audio controls class="w-full mt-3">
+                    <source src="song.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+        </div>
+    </section> -->
+
+   
+
+    <!-- JavaScript -->
+    <script>
+       
+        // function filterSongs() {
+        //     const search = document.getElementById("searchInput").value.toLowerCase();
+        //     const songs = document.querySelectorAll(".song-item");
+
+        //     songs.forEach(song => {
+        //         const title = song.querySelector("p, h3").textContent.toLowerCase();
+        //         song.style.display = title.includes(search) ? "block" : "none";
+        //     });
+        // }
+       
+                               
+    </script>
+
+{%endblock%}
+
+{%block footer%}
+   
+{% include "footer.html" %}
+
+{% endblock %}

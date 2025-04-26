@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Song Stats</title>
+</head>
+<body>
+    <h1>Your Song Stats</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Song Title</th>
+                <th>Plays</th>
+                <th>Downloads</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in song_stats %}
+            <tr>
+                <td>{{ stat.song.title }}</td>
+                <td>{{ stat.play_count }}</td>
+                <td>{{ stat.download_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

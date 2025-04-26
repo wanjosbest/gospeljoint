@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songs Uploaded</title>
+</head>
+
+<body>
+    {% for songs in getallsongs %}
+    <img src="{{songs.image.url}}" alt="" style="height: 300px; width: 300px;"><br>
+    <h2><a href="{{songs.get_absolute_url}}">{{songs.title}}</a></h2>
+    <h4>Genres: {{songs.genres}}</h4>
+
+    {% endfor %}
+    
+
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+ <!-- Main Container -->
+ <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Song Details Section -->
+    <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+        <!-- Cover Image -->
+        <div class="flex-shrink-0 w-full md:w-1/3">
+            <img src="{{postdetail.image.url}}" alt="{{postdetail.title}}" class="w-full rounded-lg shadow-md">
+        </div>
+
+        <!-- Song Info -->
+        <div class="flex-1">
+            <h1 class="text-3xl font-bold text-white mb-4">{{postdetail.title}}</h1>
+            <p class="text-lg text-gray-400 mb-2">Artist: <span class="text-white">{{postdetail.user}}</span></p>
+            <p class="text-lg text-gray-400 mb-2">Album: <span class="text-white">{{postdetail.title}}</span></p>
+            <p class="text-lg text-gray-400 mb-2">Posted: <span class="text-white">{{postdetail.published}}</span></p>
+
+            <!-- Interaction Buttons -->
+            <div class="flex items-center gap-4 mt-6">
+                <button 
+                    class="bg-yellow-500 text-black px-6 py-2 text-sm font-semibold rounded-lg shadow hover:bg-yellow-600 transition" 
+                    onclick="playSong('{{postdetail.upload_song.url}}', '{{postdetail.title}}')"
+                >
+                    Play Now
+                </button>
+                <button class="bg-gray-700 text-gray-300 px-6 py-2 text-sm font-semibold rounded-lg shadow hover:bg-gray-600 transition">
+                    Add to Playlist
+                </button>
+            </div>
+
+            <!-- "Now Playing" Indicator -->
+            <div id="nowPlaying" class="mt-8 text-yellow-500 text-lg hidden">
+                Now Playing: <span id="currentSongTitle" class="font-bold"></span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div id="progressContainer" class="mt-4 hidden">
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div id="progressBar" class="bg-yellow-500 h-2 rounded-full" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Audio Controls -->
+            <div id="controlsContainer" class="mt-4 flex items-center gap-4 hidden">
+                <button 
+                    id="playPauseButton" 
+                    class="bg-gray-700 text-gray-300 px-4 py-2 rounded hover:bg-gray-600 transition"
+                    onclick="togglePlayPause()"
+                >
+                    Pause
+                </button>
+                <input 
+                    id="volumeControl" 
+                    type="range" 
+                    min="0" 
+                    max="1" 
+                    step="0.1" 
+                    class="w-32"
+                    onchange="setVolume(this.value)"
+                >
+                <span id="currentTime" class="text-sm">0:00</span> /
+                <span id="duration" class="text-sm">0:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Songs -->
+    <div class="mt-12">
+        <h2 class="text-2xl font-bold text-white mb-6">Related Songs</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Related Song Card -->
+            <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <img src="cld-sample-5-Thumbnail.jpg" alt="Related Song" class="w-full h-40 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-white truncate">Track 2</h3>
+                    <p class="text-sm text-gray-400 mb-4">Artist Name</p>
+                    <button 
+                        class="bg-yellow-500 text-black px-4 py-2 text-sm rounded hover:bg-yellow-600 transition"
+                        onclick="playSong('song2.mp3', 'Track 2')"
+                    >
+                        Play
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Player -->
+    <audio id="audioPlayer" class="hidden">
+        <source src="" type="audio/mpeg">
+    </audio>
+</div>
+
+<script>
+    const audioPlayer = document.getElementById('audioPlayer');
+    const nowPlaying = document.getElementById('nowPlaying');
+    const currentSongTitle = document.getElementById('currentSongTitle');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const controlsContainer = document.getElementById('controlsContainer');
+    const playPauseButton = document.getElementById('playPauseButton');
+    const volumeControl = document.getElementById('volumeControl');
+    const currentTimeElement = document.getElementById('currentTime');
+    const durationElement = document.getElementById('duration');
+
+    function playSong(songUrl, songTitle) {
+        audioPlayer.src = songUrl;
+        audioPlayer.play();
+
+        // Update UI
+        currentSongTitle.textContent = songTitle;
+        nowPlaying.classList.remove('hidden');
+        progressContainer.classList.remove('hidden');
+        controlsContainer.classList.remove('hidden');
+
+        // Update duration
+        audioPlayer.onloadedmetadata = () => {
+            durationElement.textContent = formatTime(audioPlayer.duration);
+        };
+
+        // Update progress bar
+        audioPlayer.ontimeupdate = () => {
+            const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            currentTimeElement.textContent = formatTime(audioPlayer.currentTime);
+        };
+
+        // Reset UI on song end
+        audioPlayer.onended = () => {
+            progressBar.style.width = '0%';
+            playPauseButton.textContent = 'Play';
+            nowPlaying.classList.add('hidden');
+            controlsContainer.classList.add('hidden');
+        };
+    }
+
+    function togglePlayPause() {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            playPauseButton.textContent = 'Pause';
+        } else {
+            audioPlayer.pause();
+            playPauseButton.textContent = 'Play';
+        }
+    }
+
+    function setVolume(value) {
+        audioPlayer.volume = value;
+    }
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+        return `${mins}:${secs}`;
+    }
+</script>

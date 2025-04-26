@@ -1,0 +1,137 @@
+{% extends "base.html"%}
+{% block header%} 
+{% include "header.html" %}
+<title>Artist Dashboard |GospleJoint</title>
+{% endblock %}
+{% block body %}
+         
+
+   
+
+    <!-- Artist Profile Section -->
+    <section class="container mx-auto px-4 py-10">
+        <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <form action="{% url 'upgradetopremium'%}"method="POST">
+                {% csrf_token %}
+                <button type="submit">Upgrade to Premium</button>
+            </form>
+            <!-- Cover Image -->
+           
+            <div class="w-full h-40 md:h-60 bg-gray-300">
+                {% if userdetails.cover_image %}
+             
+                <img src="{{userdetails.cover_image.url}}" alt="Cover Image" class="w-full h-full object-cover">
+                {% endif %}
+                <a href="{% url 'edit_coverimage'  %}"> <button class="mt-4 px-6 py-2 bg-orange-500 text-white rounded-md">🖊 Cover Image</button></a>
+            </div>
+          
+
+            <!-- Profile Picture & Details -->
+            <div class="text-center p-6">
+              
+                <div class="-mt-16">
+                    {% if userdetails.image %}
+                    <img src="{{userdetails.image.url}}" alt="Artist Profile" class="w-24 h-24 mx-auto rounded-full border-4 border-white dark:border-gray-800 shadow-md">
+                    {% endif %}
+                </div>
+               
+            
+            
+            
+                <h3 class="mt-4 text-xl font-semibold">{{userdetails.first_name}} {{userdetails.last_name}}</h3>
+                <p class="text-gray-500 dark:text-gray-400">{{userdetails.email}}</p>
+                <a href="{% url "edit_profile"  %}"> <button class="mt-4 px-6 py-2 bg-orange-500 text-white rounded-md">🖊 Profile Pic</button></a>
+            </div>
+        </div>
+
+        <!-- Wallet Section -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6">
+            <h3 class="text-xl font-semibold mb-4">💰 Wallet Balance</h3>
+            <p class="text-2xl font-bold text-orange-500">{{userdetails.referal_wallet}}</p>
+            <button class="mt-4 w-full p-3 bg-green-500 text-white rounded-md">Withdraw Funds</button>
+        </div>
+
+        <!-- Referral Link -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6">
+            <h3 class="text-xl font-semibold mb-4">🔗 Your Referral Link</h3>
+            <div class="flex items-center border rounded-md overflow-hidden">
+                <input id="referralLink" type="text" value="{{userdetails.referal_link}}" class="w-full p-2 bg-gray-100 dark:bg-gray-700 dark:text-white outline-none">
+                <button onclick="copyReferral()" class="p-2 bg-orange-500 text-white">Copy</button>
+            </div>
+        </div>
+
+        <!-- Manage Songs -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6">
+            <h3 class="text-xl font-semibold mb-4">🎵 Your Songs</h3>
+            <h2><a href="{%url 'all_artist_songs' %}"> All Songs</a></h2>
+            <ul>
+                {% for songs in getusersongs %}
+                <li class="flex justify-between p-3 border-b">
+                   
+                    <span><a href="{{songs.get_absolute_url}}">🔥 {{songs.title}}</a></span>
+                    <div>
+                        <button class="text-blue-500 mr-2">Edit</button>
+                        <button class="text-red-500">Delete</button>
+                    </div>
+                   
+                </li>
+                {% endfor %}
+                
+            </ul>
+          <a href="{% url 'musicianuploadsong' %}">  <button class="mt-4 w-full p-3 bg-orange-500 text-white rounded-md">Upload New Song</button></a>
+        </div>
+
+        <!-- Manage Playlists -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6">
+            <h3 class="text-xl font-semibold mb-4">📂 Your Playlists</h3>
+            <ul>
+                {% for playlist in get_userplaylist%}
+                <li class="flex justify-between p-3 border-b">
+                    <span>🔥 {{playlist.name}}</span>
+                    <div>
+                        <button class="text-blue-500 mr-2">Edit</button>
+                        <button class="text-red-500">Delete</button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+           <a href="{% url 'create_playlist' %}"> <button class="mt-4 w-full p-3 bg-orange-500 text-white rounded-md">Create New Playlist</button></a>
+        </div>
+
+        <!-- Manage Account -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6">
+            <h3 class="text-xl font-semibold mb-4">⚙️ Account Settings</h3>
+            <a href="{% url 'change_password'%}"> <button class="w-full p-3 bg-blue-500 text-white rounded-md">Change Password</button></a>
+        
+            <button class="mt-4 w-full p-3 bg-red-500 text-white rounded-md">Delete Account</button>
+        </div>
+    </section>
+
+    <!-- Sticky Footer Menu -->
+    <footer class="bg-orange-500 text-white text-center p-4 fixed bottom-0 w-full shadow-md">
+        <div class="flex justify-around">
+            <a href="{% url 'index' %}" class="text-lg">🏠 Home</a>
+            <a href="{% url 'profile' %}" class="text-lg">🎤 Dashboard</a>
+            <a href="{% url 'musicianuploadsong' %}" class="text-lg">➕ Upload</a>
+        </div>
+    </footer>
+
+    <script>
+        function copyReferral() {
+            const link = document.getElementById("referralLink");
+            link.select();
+            document.execCommand("copy");
+            alert("Referral link copied!");
+        }
+    </script>
+{% endblock %}
+{% block footer %}
+{% include "footer.html" %}
+       
+{% endblock %}
+
+
+
+   
+
+

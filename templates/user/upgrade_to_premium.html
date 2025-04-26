@@ -1,0 +1,62 @@
+{% extends "base.html"%}
+{% block header%} 
+{% include "header.html" %}
+{% endblock %}
+{% block body %}
+{% if user.is_authenticated %}
+<center> <a href="{% url 'musicianuploadsong'%}"><h1 class="text-2xl font-bold text-orange-600 dark:text-orange-400">UPLOAD SONG</h1></a>
+</center>
+{% endif %}
+
+
+<div class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+    <h3>Upgrade Your Account </h3>
+    <form action="{% url 'upgradetopremium'%}"method="POST">
+        {% csrf_token %}
+        <button type="submit">Upgrade to Premium</button>
+    </form>
+
+    <button id="scrollToTop" class="fixed bottom-8 right-8 bg-orange-500 text-white p-3 rounded-full shadow-md hidden">
+        ↑
+    </button>
+    <!-- Latest Songs -->
+    <!-- <section class="container mx-auto px-4 py-6">
+        <h2 class="text-2xl font-bold text-orange-600 dark:text-orange-400">🎵 Latest Songs</h2>
+        <div id="songContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            <div class="song-item bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
+                <img src="/media/images/wanjos.jpg" alt="Song Cover" class="w-full h-40 object-cover rounded-md">
+                <h3 class="text-lg font-bold mt-2">Song Title 1</h3>
+                <p class="text-gray-500 dark:text-gray-400">Artist Name</p>
+                <audio controls class="w-full mt-3">
+                    <source src="song.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+        </div>
+    </section> -->
+
+   
+
+    <!-- JavaScript -->
+    <script>
+       
+        // function filterSongs() {
+        //     const search = document.getElementById("searchInput").value.toLowerCase();
+        //     const songs = document.querySelectorAll(".song-item");
+
+        //     songs.forEach(song => {
+        //         const title = song.querySelector("p, h3").textContent.toLowerCase();
+        //         song.style.display = title.includes(search) ? "block" : "none";
+        //     });
+        // }
+       
+                               
+    </script>
+</div>
+
+{%endblock%}
+
+{%block footer%}
+   
+{% include "footer.html" %}
+
+{% endblock %}
