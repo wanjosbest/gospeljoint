@@ -48,7 +48,7 @@ urlpatterns = [
     path("disclaimer/",views.disclaimer, name="disclaimer"),
     path("privacy/",views.privacy, name="privacy"),
     ###################################### Static Pages URLS end ###########################################################
-
+    path('branded-dp/', views.branded_dp_generator, name='branded_dp_generator'),   
    
     
    

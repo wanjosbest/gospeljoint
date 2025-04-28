@@ -509,6 +509,62 @@ def privacy(request):
 def disclaimer(request): 
     return render(request, "staticpages/disclaimer.html")    
 ########################################################### Static Pages end ############################################
+from PIL import Image
+from django.core.files.storage import default_storage
+
+def branded_dp_generator(request):
+    if request.method == 'POST' and request.FILES.get('photo'):
+        try:
+            user_photo = request.FILES['photo']
+
+            # Define the uploads directory inside MEDIA_ROOT
+            upload_dir = 'uploads/'
+
+            # Make sure the 'uploads/' directory exists
+            upload_dir_path = os.path.join(settings.MEDIA_ROOT, upload_dir)
+            os.makedirs(upload_dir_path, exist_ok=True)
+
+            # Save the uploaded photo to the 'uploads/' directory
+            photo_path = os.path.join(upload_dir_path, user_photo.name)
+            with open(photo_path, 'wb') as f:
+                for chunk in user_photo.chunks():
+                    f.write(chunk)
+
+            # Open the uploaded photo
+            uploaded_img = Image.open(photo_path).convert("RGBA")
+
+            # Open the frame image (make sure it's placed correctly in the static directory)
+            frame_path = os.path.join(settings.BASE_DIR, 'static', 'frames', 'gospeljoint_frame.png')
+            frame = Image.open(frame_path).convert("RGBA")
+
+            # Resize the frame to match the uploaded photo size while maintaining aspect ratio
+            frame = frame.resize(uploaded_img.size)
+
+            # Merge the uploaded photo and frame
+            combined = Image.alpha_composite(uploaded_img, frame)
+
+            # Save the combined image in the 'uploads/' directory
+            combined_filename = 'branded_' + user_photo.name
+            combined_path = os.path.join(upload_dir_path, combined_filename)
+            combined.save(combined_path)
+
+            # Generate the URL for the combined image
+            branded_url = os.path.join(settings.MEDIA_URL, upload_dir + combined_filename)
+
+            return render(request, 'user/branded_image_success.html', {'branded_url': branded_url})
+
+        except Exception as e:
+            # Handle any exceptions and give feedback to the user
+            return HttpResponse(f"Error: {str(e)}", status=500)
+
+    return render(request, 'user/branded_image.html')
+
+
+   
+
+
+
+
 
 
 
