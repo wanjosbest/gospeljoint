@@ -279,6 +279,15 @@ class Album(models.Model):
 
     def __str__(self):
         return self.title
+
+class Userbrandedimage(models.Model):
+      user = models.ForeignKey(User, related_name="brandedimage", on_delete=models.CASCADE, null=True)
+      branded_image_url = models.CharField(max_length=200, null=True)
+      created_at = models.DateTimeField(auto_now_add=True)
+
+      def __str__(self):
+        return f'{self.user}'
+
         
 
 

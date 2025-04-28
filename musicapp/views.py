@@ -22,7 +22,7 @@ from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse, FileResponse, Http404
 from django.conf import settings
 import os
-from .models import (PremiumUser, Album) # premium models
+from .models import (PremiumUser, Album,Userbrandedimage) # premium models
 
 FRAME_PATH = "media/images/wanjos.jpg"
 
@@ -511,8 +511,9 @@ def disclaimer(request):
 ########################################################### Static Pages end ############################################
 from PIL import Image
 from django.core.files.storage import default_storage
-
+@login_required
 def branded_dp_generator(request):
+    user = request.user
     if request.method == 'POST' and request.FILES.get('photo'):
         try:
             user_photo = request.FILES['photo']
@@ -520,57 +521,50 @@ def branded_dp_generator(request):
             # Define the uploads directory inside MEDIA_ROOT
             upload_dir = 'uploads/'
 
-            # Make sure the 'uploads/' directory exists
+            # Ensure the 'uploads/' directory exists
             upload_dir_path = os.path.join(settings.MEDIA_ROOT, upload_dir)
             os.makedirs(upload_dir_path, exist_ok=True)
 
-            # Save the uploaded photo to the 'uploads/' directory
-            photo_path = os.path.join(upload_dir_path, user_photo.name)
+            # Save the uploaded photo
+            photo_filename = user_photo.name
+            photo_path = os.path.join(upload_dir_path, photo_filename)
+
             with open(photo_path, 'wb') as f:
                 for chunk in user_photo.chunks():
                     f.write(chunk)
 
             # Open the uploaded photo
-            uploaded_img = Image.open(photo_path).convert("RGBA")
+            uploaded_img = Image.open(photo_path)
+            if uploaded_img.mode != "RGBA":
+                uploaded_img = uploaded_img.convert("RGBA")
 
-            # Open the frame image (make sure it's placed correctly in the static directory)
-            frame_path = os.path.join(settings.BASE_DIR, 'static', 'frames', 'gospeljoint_frame.png')
-            frame = Image.open(frame_path).convert("RGBA")
+            # Open the frame image
+            frame_path = os.path.join(settings.BASE_DIR, 'static', 'frames', 'gospel-removebg-preview.png')
+            frame = Image.open(frame_path)
+            if frame.mode != "RGBA":
+                frame = frame.convert("RGBA")
 
-            # Resize the frame to match the uploaded photo size while maintaining aspect ratio
+            # Resize the frame to match the uploaded photo
             frame = frame.resize(uploaded_img.size)
 
             # Merge the uploaded photo and frame
             combined = Image.alpha_composite(uploaded_img, frame)
 
-            # Save the combined image in the 'uploads/' directory
-            combined_filename = 'branded_' + user_photo.name
+            # Save the combined image
+            combined_filename = 'branded_' + photo_filename
             combined_path = os.path.join(upload_dir_path, combined_filename)
-            combined.save(combined_path)
+            combined.save(combined_path, format='PNG')  # Save as PNG to preserve transparency
 
-            # Generate the URL for the combined image
-            branded_url = os.path.join(settings.MEDIA_URL, upload_dir + combined_filename)
+            # Save the branded image URL (relative to media root) to the database
+            branded_image_url = os.path.join(upload_dir, combined_filename)
+            Userbrandedimage.objects.create(user=user, branded_image_url=branded_image_url)
+
+            # URL for user to download/view
+            branded_url = os.path.join(settings.MEDIA_URL, upload_dir, combined_filename)
 
             return render(request, 'user/branded_image_success.html', {'branded_url': branded_url})
 
         except Exception as e:
-            # Handle any exceptions and give feedback to the user
             return HttpResponse(f"Error: {str(e)}", status=500)
 
     return render(request, 'user/branded_image.html')
-
-
-   
-
-
-
-
-
-
-
-
-   
-
-
-
-

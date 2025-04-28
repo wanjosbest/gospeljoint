@@ -15,9 +15,10 @@ admin.site.register(Artist)
 
 
 ############################################# PREMIUM MODELS ##########################################################
-from .models import(PremiumUser, Album)
+from .models import(PremiumUser, Album,Userbrandedimage)
 
 
 admin.site.register(PremiumUser)
 admin.site.register(Album)
+admin.site.register(Userbrandedimage)
 
