@@ -63,8 +63,8 @@ class Post(models.Model):
     published= models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     categories = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories', null=True,blank=True) 
-    image=models.ImageField(upload_to="images",null=True)
-    branded_image = models.ImageField(upload_to='images', blank=True)
+    image=models.ImageField(upload_to="images",null=True, blank=True)
+    branded_image = models.CharField(max_length=100, blank=True)
 
     slug = models.SlugField(default="",max_length=200,unique=True, blank=True)#slug for urls
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, 
@@ -77,6 +77,7 @@ class Post(models.Model):
     download_count = models.PositiveIntegerField(default=0, null=True, blank=True)
     file_hash = models.CharField(max_length=64, unique = True, blank=True)
     image_hash = models.CharField(max_length=64, unique = True, blank=True)
+    lyrics = models.TextField(blank=True)
    
 
     def save(self, *args,**kwargs ):

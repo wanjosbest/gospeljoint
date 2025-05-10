@@ -19,7 +19,7 @@
             {% for trending in trending %}
             <a href="{{trending.post.get_absolute_url}}">
             <div class="song-item min-w-[200px] bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
-                <img src="{{trending.post.image.url}}" alt="{{trending.post.title}}" class="w-full h-32 object-cover rounded-md">
+                <img src="{{trending.post.branded_image}}" alt="{{trending.post.title}}" class="w-full h-32 object-cover rounded-md">
                <a href="{{trending.post.get_absolute_url}}"> <p class="mt-2 text-lg font-semibold">{{trending.post.title}}</p></a>
                
                 </a>
@@ -35,10 +35,12 @@
 
         <div class="flex space-x-4 overflow-x-auto py-4">
             {% for promoted in promotedsongs %}
+            <a href="{{promoted.post.get_absolute_url}}">
             <div class="song-item min-w-[200px] bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
-                <img src="{{promoted.post.image.url}}" alt="{{promoted.post.title}}" class="w-full h-32 object-cover rounded-md">
+                <img src="{{promoted.post.branded_image}}" alt="{{promoted.post.title}}" class="w-full h-32 object-cover rounded-md">
                <a href="{{promoted.post.get_absolute_url}}"> <p class="mt-2 text-lg font-semibold">{{promoted.post.title}} |{{promoted.post.user}}</p></a>
             </div>
+        </a>
         {% endfor %}
 
         </div>
@@ -50,10 +52,12 @@
         <div class="flex space-x-4 overflow-x-auto py-4">
             {% if recentposts %}
             {% for recent in recentposts %}
+            <a href="{{recent.get_absolute_url}}">
             <div class="song-item min-w-[200px] bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
-                <img src="{{recent.image.url}}" alt="{{recent.title}}" class="w-full h-32 object-cover rounded-md">
+                <img src="{{recent.branded_image}}" alt="{{recent.title}}" class="w-full h-32 object-cover rounded-md">
                <a href="{{recent.get_absolute_url}}"> <p class="mt-2 text-lg font-semibold">{{recent.title}}</p></a>
             </div>
+            </a>
         {% endfor %}
         {% endif %}
 

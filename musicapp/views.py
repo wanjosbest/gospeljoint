@@ -283,59 +283,6 @@ def sendmailtosubscribers(request):
     
     return ""
 
-#allow musician to upload their songs
-@login_required
-def musicianuploadsong(request):
-    user = request.user
-    ref = User.objects.get(username = user)
-    referer = ref.reffered_by #GET REFERAL USERNAME
-    referal_bonus = 500  
-    if request.method == "POST":
-       title = request.POST.get("title")  
-       body = request.POST.get("body")
-       image = request.FILES.get("image")
-       song = request.FILES.get("song")
-       meta_keywords = request.POST.get("meta_keywords")
-       meta_description = request.POST.get("meta_description")
-       genres = request.POST.get("genres")
-       slug = slugify(title)
-       
-       # add payment gateway here before uploading the song
-       try:
-          artisttitle = Post.objects.filter(user = request.user)
-       except Post.DoesNotExist:
-          artisttitle = None
-       if song :
-           hasher = hashlib.md5()
-           for chunk in song.chunks():
-               hasher.update(chunk)
-               file_hash = hasher.hexdigest()
-                #check for duplicate
-               if Post.objects.filter(file_hash = file_hash).exists():
-                  messages.error(request, "This Song already Exist")
-                  return redirect("musicianuploadsong")
-       if image :
-           hasher = hashlib.md5()
-           for chunk in image.chunks():
-               hasher.update(chunk)
-               image_hash = hasher.hexdigest()
-                #check for duplicate
-               if Post.objects.filter(image_hash = image_hash).exists():
-                  messages.error(request, "This Image already Exist")
-                  return redirect("musicianuploadsong")
-       savesong = Post.objects.create(user=user,title=title,body=body,image=image, upload_song=song,meta_keywords=meta_keywords, meta_description = meta_description,genres=genres,slug=slug, file_hash = file_hash, image_hash= image_hash)
-       savesong.save()
-    #    referer.referal_wallet += referal_bonus #adding 500 naira to referer
-    #    referer.save()  # save the bonus to the referer
-       messages.success(request,"Song uploaded Successfully")
-    return render(request, "user/uploadsong.html")
-    # play count
-# def songplay_count(request, song_id):
-#     song = get_object_or_404(Post, id = song_id)
-#     song.play_count += 1
-#     song.save(update_fields = ["play_count"])
-#     context = {"song":song}
-#     return render(request, "postdetails.html", context)
 
 # artist song lists
 @login_required
@@ -568,3 +515,117 @@ def branded_dp_generator(request):
             return HttpResponse(f"Error: {str(e)}", status=500)
 
     return render(request, 'user/branded_image.html')
+
+
+from PIL import Image, UnidentifiedImageError
+import hashlib, os
+from django.utils.crypto import get_random_string
+
+
+@login_required
+def musician_upload_with_branded_image(request):
+    user = request.user
+    ref = User.objects.get(username=user)
+    referer = ref.reffered_by
+    referal_bonus = 500
+    
+
+    if request.method == "POST" and request.user.is_authenticated:
+        title = request.POST.get("title")
+        body = request.POST.get("body")
+        image = request.FILES.get("image")
+        song = request.FILES.get("song")
+        meta_keywords = request.POST.get("meta_keywords")
+        meta_description = request.POST.get("meta_description")
+        genres = request.POST.get("genres")
+        slug = slugify(title)
+
+        file_hash = image_hash = None
+
+        # Check for duplicate song
+        if song:
+            hasher = hashlib.md5()
+            for chunk in song.chunks():
+                hasher.update(chunk)
+            file_hash = hasher.hexdigest()
+
+            if Post.objects.filter(file_hash=file_hash).exists():
+                messages.error(request, "This Song already exists")
+                return redirect("musicianuploadsong")
+
+        # Check for duplicate image
+        if image:
+            hasher = hashlib.md5()
+            for chunk in image.chunks():
+                hasher.update(chunk)
+            image_hash = hasher.hexdigest()
+
+            if Post.objects.filter(image_hash=image_hash).exists():
+                messages.error(request, "This Image already exists")
+                return redirect("musicianuploadsong")
+
+        
+
+        # Generate branded image if image was uploaded
+        if image:
+            try:
+                upload_dir = 'uploads/'
+                upload_dir_path = os.path.join(settings.MEDIA_ROOT, upload_dir)
+                os.makedirs(upload_dir_path, exist_ok=True)
+
+                # Save uploaded image to disk temporarily
+                image_ext = os.path.splitext(image.name)[1]
+                photo_filename = f"{get_random_string(12)}{image_ext}"
+                photo_path = os.path.join(upload_dir_path, photo_filename)
+
+                with open(photo_path, 'wb') as f:
+                    for chunk in image.chunks():
+                        f.write(chunk)
+
+                uploaded_img = Image.open(photo_path)
+                uploaded_img = uploaded_img.convert("RGBA")
+
+                frame_path = os.path.join(settings.BASE_DIR, 'static', 'frames', 'gospel-removebg-preview.png')
+                frame = Image.open(frame_path).convert("RGBA")
+                frame = frame.resize(uploaded_img.size)
+
+                combined = Image.alpha_composite(uploaded_img, frame)
+                combined_filename = 'branded_' + photo_filename
+                combined_path = os.path.join(upload_dir_path, combined_filename)
+                combined.save(combined_path, format='PNG')
+
+                branded_image_url = os.path.join(upload_dir, combined_filename)
+                Userbrandedimage.objects.create(user=user, branded_image_url=branded_image_url)
+                branded_image_url2 = f'https://gospeljoint.onrender.com/media/{branded_image_url}'
+
+            except UnidentifiedImageError:
+                messages.warning(request, "Uploaded image was invalid, so branded image wasn't created.")
+            except Exception as e:
+                messages.warning(request, f"Image branding failed: {str(e)}")
+            
+
+        # Handle referral bonus (optional)
+        # if referer:
+        #     referer.referal_wallet += referal_bonus
+        #     referer.save()
+        # Save post first
+        savesong = Post.objects.create(
+            user=user,
+            title=title,
+            body=body,
+            # image=image,
+            upload_song=song,
+            meta_keywords=meta_keywords,
+            meta_description=meta_description,
+            genres=genres,
+            slug=slug,
+            file_hash=file_hash,
+            image_hash=image_hash,
+            branded_image =branded_image_url2
+        )
+
+        messages.success(request, "Song uploaded successfully with branded image.")
+        return redirect("musicianuploadsong")
+    
+    return render(request, "user/uploadsong.html")
+

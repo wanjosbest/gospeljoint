@@ -20,7 +20,7 @@ urlpatterns = [
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register_view, name="register"),
-    path("upload-song/", views.musicianuploadsong, name="musicianuploadsong"),
+    path("upload-song/", views.musician_upload_with_branded_image, name="musicianuploadsong"),
     path("profile/", views.artistprofile, name="profile"),
     path("all-artist-songs/", views.all_artist_songs, name="all_artist_songs"),
     path("songs/<str:username>/", views.songs, name="songs"),
@@ -49,6 +49,7 @@ urlpatterns = [
     path("privacy/",views.privacy, name="privacy"),
     ###################################### Static Pages URLS end ###########################################################
     path('branded-dp/', views.branded_dp_generator, name='branded_dp_generator'),   
+    path("new-branded/", views.musician_upload_with_branded_image, name="new-branded")
    
     
    
