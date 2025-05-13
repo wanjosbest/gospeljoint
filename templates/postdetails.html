@@ -14,8 +14,8 @@
 <meta property = "og:url" content = "http://{{request.META.HTTP_HOST}}{{request.path}}">
 <meta property = "og:title" content = "{{postdetail.title}}"
 <meta property = "og:description" content = "{{postdetail.meta_description|truncatewords:20}}">
-<meta property = "og:image" content = "http://{{request.META.HTTP_HOST}}{{postdetail.branded_image}}">
-<meta name ="twitter:image" content ="http://{{request.META.HTTP_HOST}}{{postdetail.branded_image}}">
+<meta property = "og:image" content = "{{postdetail.branded_image}}">
+<meta name ="twitter:image" content ="{{postdetail.branded_image}}">
 
 {% endblock %}
 

@@ -133,3 +133,17 @@ AUTH_USER_MODEL = "musicapp.User"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
+
+
+# Email Backend Configuration
+import socket
+socket.getaddrinfo('localhost', 8080)
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Replace with your preferred backend
+EMAIL_PORT =587 # Replace with your email port
+EMAIL_USE_TLS =True # Set to False if your email server doesn't use TLS
+EMAIL_HOST = 'smtp.gmail.com'  # Replace with your email host for gmail -> 'smtp.gmail.com'
+EMAIL_HOST_USER = 'josephwandiyahyel3@gmail.com'  # Replace with your email username
+EMAIL_HOST_PASSWORD ='sranztwrlxvcclwl'  # Replace with your email password
+EMAIL_USE_SSL=False

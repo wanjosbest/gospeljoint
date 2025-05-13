@@ -444,7 +444,7 @@ def contact_us(request):
         name = request.POST.get("name")
         email = request.POST.get("email")
         message = request.POST.get("message")
-        send_mail(subject, message, "{email}",["josephwandiyahyel3@gmail.com"])
+        send_mail(subject, message,   settings.EMAIL_HOST_USER, [email], fail_silently=False)
         messages.info(request, f"Thank you {name} for contacting Gospel Joint! Be calmed as Our agents will reply you to the email you've provided.")
     return render(request, "staticpages/contactus.html")  
 def about_us(request): 

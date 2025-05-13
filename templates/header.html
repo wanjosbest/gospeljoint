@@ -16,7 +16,7 @@
         <ul class="hidden md:flex space-x-6 text-lg">
             <li><a href="{%url 'index' %}" class="hover:text-gray-200">Home</a></li>
             <li><a href="{% url 'all_songs'%}" class="hover:text-gray-200">Songs</a></li>
-            <li><a href="about.html" class="hover:text-gray-200">About</a></li>
+            <li><a href="{% url 'about_us' %}" class="hover:text-gray-200">About</a></li>
             <li><a href="{% url 'contact_us' %}" class="block">Contact</a></li>
            
             {% if user.is_authenticated%}
@@ -35,7 +35,7 @@
     <ul id="mobileMenu" class="hidden md:hidden bg-orange-600 text-white p-4 space-y-2 absolute top-16 left-0 w-full shadow-md">
         <li><a href="{%url 'index' %}" class="block">Home</a></li>
         <li><a href="{% url 'all_songs'%}" class="block">Songs</a></li>
-        <li><a href="about.html" class="block">About</a></li>
+        <li><a href="{% url 'about_us' %}" class="hover:text-gray-200">About</a></li>/a></li>
         <li><a href="{% url 'contact_us' %}" class="block">Contact</a></li>
         
         {% if user.is_authenticated%}
@@ -71,7 +71,7 @@
   {% for result in searched %}
   <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
     <a href="{{result.get_absolute_url}}">
-      <img src="{{result.image.url}}" alt="{{result.title}}" class="w-full h-40 object-cover">
+      <img src="{{result.branded_image}}" alt="{{result.title}}" class="w-full h-40 object-cover">
       <div class="p-4">
         <h2 class="text-lg font-semibold text-white truncate">{{result.title}}</h2>
     </a>

@@ -20,7 +20,7 @@
             {% for post in allpost %}
            <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
             <a href ="{{post.get_absolute_url}}">
-               <img src="{{post.image.url}}" alt="{{post.title}}" class="w-full h-40 object-cover">
+               <img src="{{post.branded_image}}" alt="{{post.title}}" class="w-full h-40 object-cover">
                <div class="p-4">
                    <h2 class="text-lg font-semibold text-white truncate">{{post.title}}</h2>
                </a>
