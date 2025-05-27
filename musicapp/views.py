@@ -596,7 +596,7 @@ def musician_upload_with_branded_image(request):
 
                 branded_image_url = os.path.join(upload_dir, combined_filename)
                 Userbrandedimage.objects.create(user=user, branded_image_url=branded_image_url)
-                branded_image_url2 = f'https://gospeljoint.pythonanywhere.com/media/{branded_image_url}'
+                branded_image_url2 = f'https://gospeljoint.onrender.com/media/{branded_image_url}'
 
             except UnidentifiedImageError:
                 messages.warning(request, "Uploaded image was invalid, so branded image wasn't created.")
