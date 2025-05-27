@@ -1,104 +1,101 @@
 {% extends "base.html"%}
-{% block header%}
-{% include "header.html" %}
+{% block header %}
+  {% include "header.html" %}
 {% endblock %}
+
 {% block body %}
 {% if messages %}
-{% for message in messages %}
-{{message}}
-{% endfor %}
+  {% for message in messages %}
+    <p class="bg-green-100 text-green-800 p-2 rounded my-2">{{ message }}</p>
+  {% endfor %}
 {% endif %}
+
 <div class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
 
+  <!-- Upload Form -->
+  <section class="container mx-auto px-4 py-10">
+    <h2 class="text-3xl font-bold text-orange-600 dark:text-orange-400 text-center">🎵 Upload Your Song</h2>
 
-    <!-- Upload Form -->
-    <section class="container mx-auto px-4 py-10">
-        <h2 class="text-3xl font-bold text-orange-600 dark:text-orange-400 text-center">🎵 Upload Your Song</h2>
+    <form class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6"
+          enctype="multipart/form-data" method="POST">
+      {% csrf_token %}
 
-        <form class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6" enctype="multipart/form-data"
-            method="POST">
-            {%csrf_token%}
-            <!-- Song Title -->
-            <label class="block text-lg font-semibold">Song Title</label>
-            <input type="text" name="title" class="w-full p-3 border rounded-md mt-2" placeholder="Enter song title"
-                required>
-            <!-- Song Genres -->
-            <label class="block text-lg font-semibold">Select Genres</label>
-            <select name="genres">
-                <option value="Gospel">Gospel</option>
-                <option value="R&B">R&B</option>
-                <option value="Pop">Pop</option>
-                <option value="Rock">Rock</option>
-                <option value="Jazz">Jazz</option>
-                <option value="Country">Country</option>
-                <option value="Raggae">Raggae</option>
-                <option value="Blues">Blues</option>
-                <option value="Electronic">Electronic</option>
-                <option value="Others">Others</option>
-            </select>
+      <!-- Song Title -->
+      <label class="block text-lg font-semibold mt-4">Song Title</label>
+      <input type="text" name="title" class="w-full p-3 border rounded-md mt-1"
+             placeholder="Enter song title" required>
 
-            <!-- Upload Song Image -->
-            <label class="block mt-4 text-lg font-semibold">Song Featured Image</label>
-            <div
-                class="border-dashed border-2 p-6 text-center rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
-                <input type="file" name="image" id="songImage" accept="image/*">
+      <!-- Song Genres -->
+      <label class="block text-lg font-semibold mt-4">Select Genre</label>
+      <select name="genres" class="w-full p-3 border rounded-md mt-1" required>
+        <option value="">-- Select Genre --</option>
+        <option value="Gospel">Gospel</option>
+        <option value="R&B">R&B</option>
+        <option value="Pop">Pop</option>
+        <option value="Rock">Rock</option>
+        <option value="Jazz">Jazz</option>
+        <option value="Country">Country</option>
+        <option value="Raggae">Raggae</option>
+        <option value="Blues">Blues</option>
+        <option value="Electronic">Electronic</option>
+        <option value="Others">Others</option>
+      </select>
 
-            </div>
+      <!-- Upload Song Image -->
+      <label class="block text-lg font-semibold mt-4">Song Featured Image</label>
+      <input type="file" name="image" accept="image/*"
+             class="w-full p-3 border rounded-md mt-1" required>
 
-            <!-- Upload Song File
-            <label for="songFile" class="block mt-4 text-lg font-semibold">Song File (MP3)</label>
-            <input type="file" name="song" id="songFile" accept="audio/mp3" class="w-full p-3 border rounded-md"
-                required> -->
+      <!-- Upload Song File -->
+      <label class="block text-lg font-semibold mt-4">Song File (MP3)</label>
+      <input type="file" name="song" accept="audio/mp3"
+             class="w-full p-3 border rounded-md mt-1" required>
 
-            <label for="songFile" class="block mt-4 text-lg font-semibold">Song </label>
-            <input type="file" name="song" id="songFile" accept="audio/mp3" class="w-full p-3 border rounded-md">
+      <!-- Progress Bar -->
+      <div class="mt-4 hidden" id="uploadProgress">
+        <div class="h-2 bg-gray-300 rounded">
+          <div id="progressBar" class="h-2 bg-orange-500 rounded w-0"></div>
+        </div>
+      </div>
 
-            <!-- Progress Bar -->
-            <div class="mt-4 hidden" id="uploadProgress">
-                <div class="h-2 bg-gray-300 rounded">
-                    <div id="progressBar" class="h-2 bg-orange-500 rounded w-0"></div>
-                </div>
-            </div>
+      <!-- Song Description -->
+      <label class="block text-lg font-semibold mt-4">Song Description</label>
+      <textarea name="body" rows="4" class="w-full p-3 border rounded-md mt-1"
+                placeholder="Write about the song (max 1000 words)" required></textarea>
 
-            <!-- Song Description -->
-            <label class="block mt-4 text-lg font-semibold">Song Description</label>
-            <textarea class="w-full p-3 border rounded-md mt-2" rows="4"
-                placeholder="Write about the song (max 1000 words)" name="body" required></textarea>
+      <!-- Meta Keywords -->
+      <label class="block text-lg font-semibold mt-4">Meta Keywords</label>
+      <input type="text" name="meta_keywords" class="w-full p-3 border rounded-md mt-1"
+             placeholder="e.g. mercy chinwo, afrobeat, hip-hop" required>
 
-            <!-- Meta Keywords -->
-            <label class="block mt-4 text-lg font-semibold">Meta Keywords (comma separated)</label>
-            <input type="text" class="w-full p-3 border rounded-md mt-2"
-                placeholder="e.g. wanjos great is your mercy,afrobeat, hip-hop, rap" name="meta_keywords" required>
+      <!-- Meta Description -->
+      <label class="block text-lg font-semibold mt-4">Meta Description</label>
+      <textarea name="meta_description" rows="3" class="w-full p-3 border rounded-md mt-1"
+                placeholder="Short song description (max 150 words)" required></textarea>
 
-            <!-- Meta Description -->
-            <label class="block mt-4 text-lg font-semibold">Meta Description</label>
-            <textarea class="w-full p-3 border rounded-md mt-2" rows="3"
-                placeholder="Short song description (max 150 words)" name="meta_description" required></textarea>
-
-            <!-- Submit Button -->
-            <button type="submit"
-                class="w-full mt-6 p-3 bg-orange-500 text-white text-lg rounded-md hover:bg-orange-600">
-                🚀 Upload Song
-            </button>
-        </form>
-    </section>
-
+      <!-- Submit Button -->
+      <button type="submit"
+              class="w-full mt-6 p-3 bg-orange-500 text-white text-lg rounded-md hover:bg-orange-600 transition">
+        🚀 Upload Song
+      </button>
+    </form>
+  </section>
 </div>
 
+<!-- Mobile Menu Script -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const menuBtn = document.getElementById('menuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    });
+  document.addEventListener('DOMContentLoaded', function () {
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+  });
 </script>
 
-{%endblock%}
-
-{%block footer%}
-
-{% include "footer.html" %}
+{% endblock %}
+{% block footer %}
+  {% include "footer.html" %}
 {% endblock %}
