@@ -47,10 +47,7 @@
 
             <!-- Upload Song File -->
             <label for="songFile" class="block mt-4 text-lg font-semibold">Song File (MP3)</label>
-            <div
-                class="border-dashed border-2 p-6 text-center rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
-                <input type="file" name="song" id="songFile" accept="audio/mp3" class="w-full" required>
-            </div>
+            <input type="file" name="song" id="songFile" accept="audio/mp3" class="w-full p-3 border rounded-md" required>
 
             <!-- Progress Bar -->
             <div class="mt-4 hidden" id="uploadProgress">
@@ -84,15 +81,15 @@
 
 </div>
 
- <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
 
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
     });
-  });
 </script>
 
 {%endblock%}
