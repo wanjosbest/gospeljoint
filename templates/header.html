@@ -2,7 +2,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class' };
+        tailwind.config = {darkMode: 'class' };
     </script>
 
 
@@ -35,7 +35,7 @@
     <ul id="mobileMenu" class="hidden md:hidden bg-orange-600 text-white p-4 space-y-2 absolute top-16 left-0 w-full shadow-md">
         <li><a href="{%url 'index' %}" class="block">Home</a></li>
         <li><a href="{% url 'all_songs'%}" class="block">Songs</a></li>
-        <li><a href="{% url 'about_us' %}" class="hover:text-gray-200">About</a></li>/a></li>
+        <li><a href="{% url 'about_us' %}" class="hover:text-gray-200">About</a></li></li>
         <li><a href="{% url 'contact_us' %}" class="block">Contact</a></li>
         
         {% if user.is_authenticated%}
